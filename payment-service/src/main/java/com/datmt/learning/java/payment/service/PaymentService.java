@@ -7,6 +7,8 @@ import com.datmt.learning.java.common.helper.MessagingTopics;
 import com.datmt.learning.java.payment.model.Payment;
 import com.datmt.learning.java.payment.model.PaymentStatus;
 import com.datmt.learning.java.payment.repository.PaymentRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -17,6 +19,7 @@ import java.util.List;
 
 @Service
 public class PaymentService {
+    private final Logger log = LoggerFactory.getLogger(PaymentService.class);
 
     private final PaymentRepository repo;
     private final RabbitTemplate rabbitTemplate;
@@ -36,6 +39,7 @@ public class PaymentService {
     }
 
     public void processOrder(OrderPlacedEvent event) {
+        log.info("PaymentService.processOrder {}", event);
         BigDecimal totalAmount = mockAmountCalculation(event); // In real world, this is calculated per item
 
         Payment payment = new Payment();
@@ -53,6 +57,7 @@ public class PaymentService {
                     event.orderUlid(),
                     totalAmount
             );
+            log.info("Payment success: {}", processed);
             rabbitTemplate.convertAndSend(
                     MessagingTopics.Payment.EXCHANGE,
                     MessagingTopics.Payment.ROUTING_KEY_PAYMENT_PROCESSED,
@@ -68,6 +73,7 @@ public class PaymentService {
                     event.orderUlid(),
                     payment.getFailureReason()
             );
+            log.info("Payment failed: {}", failed);
             rabbitTemplate.convertAndSend(
                     MessagingTopics.Payment.EXCHANGE,
                     MessagingTopics.Payment.ROUTING_KEY_PAYMENT_FAILED,

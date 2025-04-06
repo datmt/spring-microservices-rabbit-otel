@@ -6,6 +6,8 @@ import com.datmt.learning.java.common.dto.OrderPlacedEvent;
 import com.datmt.learning.java.common.helper.MessagingTopics;
 import com.datmt.learning.java.inventory.model.InventoryItem;
 import com.datmt.learning.java.inventory.repository.InventoryRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class InventoryService {
+    private final Logger log = LoggerFactory.getLogger(InventoryService.class);
 
     private final InventoryRepository repo;
     private final RabbitTemplate rabbitTemplate;
@@ -38,7 +41,7 @@ public class InventoryService {
 
     public InventoryItem updateQuantity(String productUlid, int newQuantity) {
         InventoryItem item = repo.findByProductUlid(productUlid)
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+                .orElse(new InventoryItem(productUlid, 0, 0));
         item.setAvailableQuantity(newQuantity);
         return repo.save(item);
     }
@@ -48,6 +51,7 @@ public class InventoryService {
     }
 
     public void handleOrderPlaced(OrderPlacedEvent event) {
+        log.info("InventoryService.handleOrderPlaced {}", event);
         List<String> productUlids = event.items().stream()
                 .map(OrderPlacedEvent.Item::productUlid)
                 .toList();
@@ -78,6 +82,7 @@ public class InventoryService {
                             .map(i -> new InventoryReservedEvent.Item(i.productUlid(), i.quantity()))
                             .toList()
             );
+            log.info("InventoryService.handleOrderPlaced: Reserved {}", reservedEvent);
             rabbitTemplate.convertAndSend(
                     MessagingTopics.Inventory.EXCHANGE,
                     MessagingTopics.Inventory.ROUTING_KEY_INVENTORY_RESERVED,
@@ -88,6 +93,7 @@ public class InventoryService {
                     event.orderUlid(),
                     failedItems.stream().map(OrderPlacedEvent.Item::productUlid).toList()
             );
+            log.info("InventoryService.handleOrderPlaced: Out of stock {}", outOfStock);
             rabbitTemplate.convertAndSend(
                     MessagingTopics.Inventory.EXCHANGE,
                     MessagingTopics.Inventory.ROUTING_KEY_OUT_OF_STOCK,

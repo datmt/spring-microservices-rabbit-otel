@@ -2,10 +2,12 @@ package com.datmt.learning.java.order.model;
 
 import com.datmt.learning.java.common.model.BaseEntity;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 
 import java.math.BigDecimal;
 
-@Entity
+@Entity()
+@Table(name = "order_items")
 public class OrderItem extends BaseEntity {
 
     private String productUlid; // Reference to catalog-service Product

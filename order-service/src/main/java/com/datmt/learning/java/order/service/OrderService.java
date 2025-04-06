@@ -8,6 +8,8 @@ import com.datmt.learning.java.order.dto.OrderItemDTO;
 import com.datmt.learning.java.order.model.Order;
 import com.datmt.learning.java.order.model.OrderItem;
 import com.datmt.learning.java.order.repository.OrderRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,7 @@ import java.util.List;
 
 @Service
 public class OrderService {
+    private final Logger log = LoggerFactory.getLogger(OrderService.class);
 
     private final OrderRepository orderRepository;
     private final RabbitTemplate rabbitTemplate;
@@ -28,6 +31,7 @@ public class OrderService {
     }
 
     public OrderDTO createOrder(CreateOrderRequest req) {
+        log.info("OrderService.createOrder {}", req);
         Order order = new Order();
 
         List<OrderItem> items = req.items().stream().map(itemReq -> {
@@ -52,6 +56,7 @@ public class OrderService {
                         .toList()
         );
 
+        log.info("OrderService.createOrder - OrderPlacedEvent {}", event);
         rabbitTemplate.convertAndSend(
                 MessagingTopics.Order.EXCHANGE,
                 MessagingTopics.Order.ROUTING_KEY_ORDER_PLACED,

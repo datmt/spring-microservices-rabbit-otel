@@ -66,6 +66,7 @@ public final class MessagingTopics {
         public static final String EXCHANGE = "catalog.exchange";
 
         public static final String ROUTING_KEY_PRODUCT_UPDATED = "product.updated";
+        public static final String ROUTING_KEY_PRODUCT_CREATED = "product.created";
 
         public static final String QUEUE_ORDER_PRODUCT_UPDATED = "order.product_updated";
     }

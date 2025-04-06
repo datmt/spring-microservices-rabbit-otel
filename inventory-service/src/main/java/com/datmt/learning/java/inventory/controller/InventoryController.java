@@ -5,7 +5,6 @@ import com.datmt.learning.java.inventory.service.InventoryService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/api/inventory")
@@ -28,8 +27,10 @@ public class InventoryController {
     }
 
     @PutMapping("/{productUlid}")
-    public InventoryItem update(@PathVariable String productUlid, @RequestBody Map<String, Integer> payload) {
-        return service.updateQuantity(productUlid, payload.getOrDefault("availableQuantity", 0));
+    public InventoryItem update(@PathVariable String productUlid,
+                                @RequestParam(value = "availableQuantity")
+                                Integer availableQuantity) {
+        return service.updateQuantity(productUlid, availableQuantity);
     }
 
     @PostMapping

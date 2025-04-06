@@ -2,7 +2,10 @@ package com.datmt.learning.java.catalog.service;
 
 import com.datmt.learning.java.catalog.model.Product;
 import com.datmt.learning.java.catalog.repository.ProductRepository;
+import com.datmt.learning.java.common.dto.ProductCreatedEvent;
 import com.datmt.learning.java.common.dto.ProductDTO;
+import com.datmt.learning.java.common.helper.MessagingTopics;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,9 +17,10 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository repository;
-
-    public ProductService(ProductRepository repository) {
+    private final RabbitTemplate rabbitTemplate;
+    public ProductService(ProductRepository repository, RabbitTemplate rabbitTemplate) {
         this.repository = repository;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     public ProductDTO create(ProductDTO dto) {
@@ -28,6 +32,19 @@ public class ProductService {
         return toDTO(saved);
     }
 
+    private void emitEvent(Product saved) {
+        ProductCreatedEvent event = new ProductCreatedEvent(
+                saved.getUlid(),
+                saved.getName(),
+                saved.getPrice()
+        );
+
+        rabbitTemplate.convertAndSend(
+                MessagingTopics.Catalog.EXCHANGE,
+                MessagingTopics.Catalog.ROUTING_KEY_PRODUCT_CREATED,
+                event
+        );
+    }
     public List<ProductDTO> findAll() {
         return repository.findAll().stream()
                 .map(this::toDTO)

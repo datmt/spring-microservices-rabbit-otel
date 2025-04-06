@@ -10,13 +10,14 @@ spring:
         size: ${RABBITMQ_CACHE_CHANNEL_SIZE:500} # default 500
       connection:
         mode: channel
+  jpa:
+    hibernate:
+      ddl-auto: update
   datasource:
     url: jdbc:h2:file:./data/shipment.db
     username: sa
     password:
     driver-class-name: org.h2.Driver
-  jpa:
-    hibernate:
   h2:
     console:
       enabled: true

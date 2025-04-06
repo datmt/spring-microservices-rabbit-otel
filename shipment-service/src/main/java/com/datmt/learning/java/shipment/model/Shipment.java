@@ -4,8 +4,10 @@ import com.datmt.learning.java.common.model.BaseEntity;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Table;
 
-@Entity
+@Entity()
+@Table(name = "shipments")
 public class Shipment extends BaseEntity {
 
     private String orderUlid;
