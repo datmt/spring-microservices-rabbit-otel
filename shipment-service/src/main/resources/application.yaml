@@ -1,0 +1,18 @@
+spring:
+  rabbitmq:
+    host: ${RABBITMQ_HOST:}
+    port: ${RABBITMQ_PORT:}
+    username: ${RABBITMQ_USERNAME:}
+    password: ${RABBITMQ_PASSWORD:}
+    virtual-host: ${DEMO_RABBITMQ_VHOST:}
+    cache:
+      channel:
+        size: ${RABBITMQ_CACHE_CHANNEL_SIZE:500} # default 500
+      connection:
+        mode: channel
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+server:
+  port: 8105
