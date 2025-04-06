@@ -5,6 +5,7 @@ import com.datmt.learning.java.catalog.repository.ProductRepository;
 import com.datmt.learning.java.common.dto.ProductDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -49,6 +50,7 @@ public class ProductService {
         return toDTO(repository.save(product));
     }
 
+    @Transactional
     public void delete(String ulid) {
         if (!repository.existsByUlid(ulid)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND);
