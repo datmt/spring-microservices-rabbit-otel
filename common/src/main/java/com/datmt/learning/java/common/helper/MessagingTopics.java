@@ -30,7 +30,7 @@ public final class MessagingTopics {
 
         public static final String ROUTING_KEY_PAYMENT_PROCESSED = "payment.processed";
         public static final String ROUTING_KEY_PAYMENT_FAILED = "payment.failed";
-        public static final String QUEUE_PAYMENT_ORDER_PLACED = "payment.order_placed";
+        public static final String QUEUE_PAYMENT_INVENTORY_RESERVED = "payment.inventory_reserved";
     }
 
     // ==========================

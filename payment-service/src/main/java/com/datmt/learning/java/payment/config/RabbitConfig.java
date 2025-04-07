@@ -22,18 +22,16 @@ public class RabbitConfig {
         return new TopicExchange(MessagingTopics.Payment.EXCHANGE);
     }
     @Bean
-    public Queue orderPlacedQueue() {
-        return QueueBuilder.durable(MessagingTopics.Payment.QUEUE_PAYMENT_ORDER_PLACED).build();
+    public Queue inventoryReservedQueue() {
+        return QueueBuilder.durable(MessagingTopics.Payment.QUEUE_PAYMENT_INVENTORY_RESERVED).build();
     }
 
     @Bean
-    public Binding bindOrderPlaced(Queue orderPlacedQueue, TopicExchange orderExchange) {
-        return BindingBuilder.bind(orderPlacedQueue)
+    public Binding bindOrderPlaced(Queue inventoryReservedQueue, TopicExchange orderExchange) {
+        return BindingBuilder.bind(inventoryReservedQueue)
                 .to(orderExchange)
-                .with(MessagingTopics.Order.ROUTING_KEY_ORDER_PLACED);
+                .with(MessagingTopics.Inventory.ROUTING_KEY_INVENTORY_RESERVED);
     }
-
-
 
     @Bean
     public MessageConverter jsonMessageConverter() {
