@@ -26,20 +26,43 @@ The order workflow looks like this:
 
 ```mermaid
 sequenceDiagram
+    participant User
     participant Catalog
     participant Order
+    participant Rabbit
     participant Inventory
     participant Payment
     participant Shipment
 
     User->>Catalog: View product
     User->>Order: Place order (HTTP)
-    Order-->>Inventory: OrderPlacedEvent (RabbitMQ)
-    Inventory-->>Order: InventoryReservedEvent / OutOfStockEvent
-    Order-->>Payment: OrderPlacedEvent
-    Payment-->>Order: PaymentProcessedEvent / PaymentFailedEvent
-    Order-->>Shipment: OrderPaidEvent
-    Shipment-->>Order: ShipmentCreatedEvent
+
+    Order->>Rabbit: Publish OrderPlacedEvent<br>(order.exchange / order.placed)
+    Rabbit->>Inventory: Routed to inventory.order_placed queue
+
+    Inventory->>Rabbit: Publish InventoryReservedEvent / OutOfStockEvent<br>(inventory.exchange)
+    Rabbit->>Order: Routed to order.inventory_reserved or order.inventory_out_of_stock queue
+
+    alt InventoryReserved
+        Order->>Rabbit: Publish OrderReadyForPaymentEvent<br>(order.exchange / order.ready-for-payment)
+        Rabbit->>Payment: Routed to payment.order_ready queue
+
+        Payment->>Rabbit: Publish PaymentProcessedEvent / PaymentFailedEvent<br>(payment.exchange)
+        Rabbit->>Order: Routed to order.payment_processed or order.payment_failed queue
+
+        alt PaymentProcessed
+            Order->>Rabbit: Publish OrderPaidEvent<br>(order.exchange / order.paid)
+            Rabbit->>Shipment: Routed to shipment.order_paid queue
+
+            Shipment->>Rabbit: Publish OrderShippedEvent<br>(shipment.exchange)
+            Rabbit->>Order: Routed to order.shipment_created queue
+        end
+    end
+
+    alt OutOfStock
+        Order->>Order: Mark order as FAILED
+    end
+
 ```
 
 All messages are defined using clean, structured DTOs, and published via Spring’s `RabbitTemplate`. Tracing headers are propagated automatically through RabbitMQ using OpenTelemetry and Micrometer.
