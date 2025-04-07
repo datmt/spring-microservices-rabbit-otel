@@ -14,8 +14,8 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitConfig {
 
     @Bean
-    public TopicExchange orderExchange() {
-        return new TopicExchange(MessagingTopics.Order.EXCHANGE);
+    public TopicExchange inventoryExchange() {
+        return new TopicExchange(MessagingTopics.Inventory.EXCHANGE);
     }
     @Bean
     public TopicExchange paymentExchange() {
@@ -27,9 +27,9 @@ public class RabbitConfig {
     }
 
     @Bean
-    public Binding bindOrderPlaced(Queue inventoryReservedQueue, TopicExchange orderExchange) {
+    public Binding bindOrderPlaced(Queue inventoryReservedQueue, TopicExchange inventoryExchange) {
         return BindingBuilder.bind(inventoryReservedQueue)
-                .to(orderExchange)
+                .to(inventoryExchange)
                 .with(MessagingTopics.Inventory.ROUTING_KEY_INVENTORY_RESERVED);
     }
 
