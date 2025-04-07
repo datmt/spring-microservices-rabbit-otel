@@ -111,21 +111,18 @@ Access the Jaeger UI at: [http://localhost:16686](http://localhost:16686)
 ### 📁 Clone the Repo
 
 ```bash
-git clone https://github.com/yourname/online-store-microservices.git
-cd online-store-microservices
+git clone https://github.com/datmt/spring-microservices-rabbit-otel
 ```
 
 ### 🧰 Start Infrastructure
 
 ```bash
-docker compose up -d
+docker compose -f infra-docker-compose.yaml up -d
 ```
 
 This starts:
 - 🐇 RabbitMQ (internal)
 - 📈 Jaeger UI (on `http://localhost:16686`)
-
-> **Note:** Only Jaeger is exposed to the host. RabbitMQ is used internally.
 
 ---
 

@@ -47,7 +47,7 @@ public class PaymentService {
         payment.setAmount(totalAmount);
         payment.setStatus(PaymentStatus.PENDING);
 
-        boolean success = Math.random() > 0.1; // simulate 90% success
+        boolean success = Math.random() > 0.4; // simulate 60% success
 
         if (success) {
             payment.setStatus(PaymentStatus.SUCCESS);
