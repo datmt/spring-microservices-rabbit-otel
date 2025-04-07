@@ -1,12 +1,13 @@
 package com.datmt.learning.java.order.service;
 
-import com.datmt.learning.java.common.dto.OrderPlacedEvent;
+import com.datmt.learning.java.common.dto.*;
 import com.datmt.learning.java.common.helper.MessagingTopics;
 import com.datmt.learning.java.order.dto.CreateOrderRequest;
 import com.datmt.learning.java.order.dto.OrderDTO;
 import com.datmt.learning.java.order.dto.OrderItemDTO;
 import com.datmt.learning.java.order.model.Order;
 import com.datmt.learning.java.order.model.OrderItem;
+import com.datmt.learning.java.order.model.OrderStatus;
 import com.datmt.learning.java.order.repository.OrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,5 +104,35 @@ public class OrderService {
         dto.setItems(items);
         return dto;
     }
+
+    public void handleInventoryReserved(InventoryReservedEvent event) {
+        updateOrderStatus(event.orderUlid(), OrderStatus.RESERVED);
+    }
+
+    public void handleInventoryOutOfStock(InventoryOutOfStockEvent event) {
+        updateOrderStatus(event.orderUlid(), OrderStatus.FAILED);
+    }
+
+    public void handlePaymentProcessed(PaymentProcessedEvent event) {
+        updateOrderStatus(event.orderUlid(), OrderStatus.PAID);
+    }
+
+    private void updateOrderStatus(String orderUlid, OrderStatus orderStatus) {
+        log.info("OrderService.updateOrderStatus {} to {}", orderUlid, orderStatus);
+        orderRepository.findByUlid(orderUlid)
+                .ifPresent(order -> {
+                    order.setStatus(orderStatus);
+                    orderRepository.save(order);
+                });
+    }
+
+    public void handlePaymentFailed(PaymentFailedEvent event) {
+        updateOrderStatus(event.orderUlid(), OrderStatus.FAILED);
+    }
+
+    public void handleOrderShipped(OrderShippedEvent event) {
+        updateOrderStatus(event.orderUlid(), OrderStatus.SHIPPED);
+    }
+
 }
 

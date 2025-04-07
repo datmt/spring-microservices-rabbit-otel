@@ -12,13 +12,25 @@ public final class MessagingTopics {
     public static final class Order {
         public static final String EXCHANGE = "order.exchange";
 
+        // Routing keys used by order-service to PUBLISH events
         public static final String ROUTING_KEY_ORDER_PLACED = "order.placed";
         public static final String ROUTING_KEY_ORDER_SHIPPED = "order.shipped";
         public static final String ROUTING_KEY_ORDER_FAILED = "order.failed";
 
+        // Queues used by OTHER services to receive order events
         public static final String QUEUE_PAYMENT_ORDER_PLACED = "payment.order_placed";
         public static final String QUEUE_INVENTORY_ORDER_PLACED = "inventory.order_placed";
+
+        // Queues used by ORDER-SERVICE to CONSUME external events
+        public static final String QUEUE_ORDER_INVENTORY_RESERVED = "order.inventory_reserved";
+        public static final String QUEUE_ORDER_INVENTORY_OUT_OF_STOCK = "order.inventory_out_of_stock";
+
+        public static final String QUEUE_ORDER_PAYMENT_PROCESSED = "order.payment_processed";
+        public static final String QUEUE_ORDER_PAYMENT_FAILED = "order.payment_failed";
+
+        public static final String QUEUE_ORDER_SHIPMENT_CREATED = "order.shipment_created";
     }
+
 
     // ==========================
     // PAYMENT DOMAIN
