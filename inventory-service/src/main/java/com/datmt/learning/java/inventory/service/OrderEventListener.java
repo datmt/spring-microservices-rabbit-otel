@@ -2,6 +2,7 @@ package com.datmt.learning.java.inventory.service;
 
 import com.datmt.learning.java.common.dto.OrderPlacedEvent;
 import com.datmt.learning.java.common.helper.MessagingTopics;
+import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +16,7 @@ public class OrderEventListener {
     }
 
     @RabbitListener(queues = MessagingTopics.Order.QUEUE_INVENTORY_ORDER_PLACED)
-    public void handleOrderPlaced(OrderPlacedEvent event) {
+    public void handleOrderPlaced(OrderPlacedEvent event, Message message) {
         inventoryService.handleOrderPlaced(event);
     }
 }

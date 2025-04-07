@@ -1,4 +1,16 @@
 spring:
+  application:
+    name: catalog-service
+
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0 # Always sample during dev
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
   rabbitmq:
     host: ${RABBITMQ_HOST:}
     port: ${RABBITMQ_PORT:}

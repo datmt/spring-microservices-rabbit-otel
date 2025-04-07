@@ -16,6 +16,7 @@ public class RabbitConfig {
     public TopicExchange catalogExchange() {
         return new TopicExchange(MessagingTopics.Catalog.EXCHANGE);
     }
+
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();

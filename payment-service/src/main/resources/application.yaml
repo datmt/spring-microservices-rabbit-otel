@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: payment-service
   rabbitmq:
     host: ${RABBITMQ_HOST:}
     port: ${RABBITMQ_PORT:}
@@ -21,5 +23,14 @@ spring:
   h2:
     console:
       enabled: true
+management:
+  tracing:
+    enabled: true
+    sampling:
+      probability: 1.0 # Always sample during dev
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
 server:
   port: 8103

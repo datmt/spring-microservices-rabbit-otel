@@ -88,6 +88,7 @@ public class RabbitConfig {
                 .to(new TopicExchange(MessagingTopics.Catalog.EXCHANGE))
                 .with(MessagingTopics.Catalog.ROUTING_KEY_PRODUCT_UPDATED);
     }
+
     @Bean
     public MessageConverter jsonMessageConverter() {
         return new Jackson2JsonMessageConverter();
