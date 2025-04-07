@@ -14,7 +14,7 @@ public class PaymentEventListener {
         this.shipmentService = shipmentService;
     }
 
-    @RabbitListener(queues = MessagingTopics.Payment.QUEUE_SHIPMENT_PAYMENT_PROCESSED)
+    @RabbitListener(queues = MessagingTopics.Shipment.QUEUE_SHIPMENT_PAYMENT_PROCESSED)
     public void onPaymentProcessed(PaymentProcessedEvent event) {
         shipmentService.handlePaymentProcessed(event);
     }

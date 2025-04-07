@@ -17,23 +17,23 @@ public class RabbitConfig {
     public TopicExchange orderExchange() {
         return new TopicExchange(MessagingTopics.Order.EXCHANGE);
     }
-
-    @Bean
-    public Queue orderPlacedQueue() {
-        return QueueBuilder.durable(MessagingTopics.Order.QUEUE_PAYMENT_ORDER_PLACED).build();
-    }
-
-    @Bean
-    public Binding bindOrderPlaced() {
-        return BindingBuilder.bind(orderPlacedQueue())
-                .to(orderExchange())
-                .with(MessagingTopics.Order.ROUTING_KEY_ORDER_PLACED);
-    }
-
     @Bean
     public TopicExchange paymentExchange() {
         return new TopicExchange(MessagingTopics.Payment.EXCHANGE);
     }
+    @Bean
+    public Queue orderPlacedQueue() {
+        return QueueBuilder.durable(MessagingTopics.Payment.QUEUE_PAYMENT_ORDER_PLACED).build();
+    }
+
+    @Bean
+    public Binding bindOrderPlaced(Queue orderPlacedQueue, TopicExchange orderExchange) {
+        return BindingBuilder.bind(orderPlacedQueue)
+                .to(orderExchange)
+                .with(MessagingTopics.Order.ROUTING_KEY_ORDER_PLACED);
+    }
+
+
 
     @Bean
     public MessageConverter jsonMessageConverter() {

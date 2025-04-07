@@ -14,7 +14,7 @@ public class OrderEventListener {
         this.paymentService = paymentService;
     }
 
-    @RabbitListener(queues = MessagingTopics.Order.QUEUE_PAYMENT_ORDER_PLACED)
+    @RabbitListener(queues = MessagingTopics.Payment.QUEUE_PAYMENT_ORDER_PLACED)
     public void onOrderPlaced(OrderPlacedEvent event) {
         paymentService.processOrder(event);
     }

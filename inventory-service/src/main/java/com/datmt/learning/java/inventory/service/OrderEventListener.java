@@ -15,7 +15,7 @@ public class OrderEventListener {
         this.inventoryService = inventoryService;
     }
 
-    @RabbitListener(queues = MessagingTopics.Order.QUEUE_INVENTORY_ORDER_PLACED)
+    @RabbitListener(queues = MessagingTopics.Inventory.QUEUE_INVENTORY_ORDER_PLACED)
     public void handleOrderPlaced(OrderPlacedEvent event, Message message) {
         inventoryService.handleOrderPlaced(event);
     }

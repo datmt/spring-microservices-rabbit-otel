@@ -11,17 +11,7 @@ public final class MessagingTopics {
     // ==========================
     public static final class Order {
         public static final String EXCHANGE = "order.exchange";
-
-        // Routing keys used by order-service to PUBLISH events
         public static final String ROUTING_KEY_ORDER_PLACED = "order.placed";
-        public static final String ROUTING_KEY_ORDER_SHIPPED = "order.shipped";
-        public static final String ROUTING_KEY_ORDER_FAILED = "order.failed";
-
-        // Queues used by OTHER services to receive order events
-        public static final String QUEUE_PAYMENT_ORDER_PLACED = "payment.order_placed";
-        public static final String QUEUE_INVENTORY_ORDER_PLACED = "inventory.order_placed";
-
-        // Queues used by ORDER-SERVICE to CONSUME external events
         public static final String QUEUE_ORDER_INVENTORY_RESERVED = "order.inventory_reserved";
         public static final String QUEUE_ORDER_INVENTORY_OUT_OF_STOCK = "order.inventory_out_of_stock";
 
@@ -40,10 +30,7 @@ public final class MessagingTopics {
 
         public static final String ROUTING_KEY_PAYMENT_PROCESSED = "payment.processed";
         public static final String ROUTING_KEY_PAYMENT_FAILED = "payment.failed";
-
-        public static final String QUEUE_ORDER_PAYMENT_PROCESSED = "order.payment_processed";
-        public static final String QUEUE_SHIPMENT_PAYMENT_PROCESSED = "shipment.payment_processed";
-        public static final String QUEUE_ORDER_PAYMENT_FAILED = "order.payment_failed";
+        public static final String QUEUE_PAYMENT_ORDER_PLACED = "payment.order_placed";
     }
 
     // ==========================
@@ -51,12 +38,10 @@ public final class MessagingTopics {
     // ==========================
     public static final class Inventory {
         public static final String EXCHANGE = "inventory.exchange";
+        public static final String QUEUE_INVENTORY_ORDER_PLACED = "inventory.order_placed";
 
         public static final String ROUTING_KEY_INVENTORY_RESERVED = "inventory.reserved";
         public static final String ROUTING_KEY_OUT_OF_STOCK = "inventory.out_of_stock";
-
-        public static final String QUEUE_ORDER_INVENTORY_RESERVED = "order.inventory_reserved";
-        public static final String QUEUE_ORDER_OUT_OF_STOCK = "order.inventory_out_of_stock";
     }
 
     // ==========================
@@ -64,11 +49,8 @@ public final class MessagingTopics {
     // ==========================
     public static final class Shipment {
         public static final String EXCHANGE = "shipment.exchange";
-
         public static final String ROUTING_KEY_SHIPMENT_CREATED = "shipment.created";
-        public static final String ROUTING_KEY_SHIPMENT_DELIVERED = "shipment.delivered";
-
-        public static final String QUEUE_ORDER_SHIPMENT_CREATED = "order.shipment_created";
+        public static final String QUEUE_SHIPMENT_PAYMENT_PROCESSED = "shipment.payment_processed";
     }
 
     // ==========================
@@ -76,10 +58,6 @@ public final class MessagingTopics {
     // ==========================
     public static final class Catalog {
         public static final String EXCHANGE = "catalog.exchange";
-
-        public static final String ROUTING_KEY_PRODUCT_UPDATED = "product.updated";
         public static final String ROUTING_KEY_PRODUCT_CREATED = "product.created";
-
-        public static final String QUEUE_ORDER_PRODUCT_UPDATED = "order.product_updated";
     }
 }
